@@ -206,6 +206,9 @@ namespace ClusterizationGeneticAlgorihm
                 min_mean_number_resultsOfTesting[k, 2] = setQuantity;
             }
         }
+        /* структура функции тестирования не изменилась, был использован объект класса testInfo 
+         * с целью сокращения кода (класс встроенный и описан в конце файла)
+         * */
         private void OrderedTestResultsForParameters(double[,] testData, int rowsNumber, int columnsNumber)
         {
             resultsOfTesting = new double[currentSamplesNumber][];
@@ -279,6 +282,7 @@ namespace ClusterizationGeneticAlgorihm
             }
             return true;
         }
+        //сохраняет в том числе номер фильтра по "эффективности" и разницу фтнессса этого фильтра и самого эффективного
         public bool SaveCurrentResultsWithAllParameters(string fileName, double[,] testData, int rowsNumber, int columnsNumber)
         {
             //TestResultsForParameters(testData, rowsNumber, columnsNumber);
@@ -306,13 +310,17 @@ namespace ClusterizationGeneticAlgorihm
                         {
                             writer.Write((paramsOfTestingResultsFil[i][j]).ToString() + " ");
                         }
+                        //дописываем номер фильтра для текущего изображения по значению фитнесс функции
                         writer.WriteLine();
+                        writer.Write("Filtration scheme number by effectivness: ");
                         rowLen = paramsOfTestingResultsFilOrderNum[i].Length;
                         for (int j = 0; j < rowLen; j++)
                         {
                             writer.Write((paramsOfTestingResultsFilOrderNum[i][j]).ToString() + " ");
                         }
-                        writer.WriteLine();
+                        writer.WriteLine("");
+                        writer.Write("Difference between current filtretion scheme and best scheme for current image: ");
+                        //дописываем разницу фитнесса выбранного фильтра и лучшего фильтра
                         rowLen = paramsOfTestingResultsFilDifference[i].Length;
                         for (int j = 0; j < rowLen; j++)
                         {
@@ -441,7 +449,9 @@ namespace ClusterizationGeneticAlgorihm
             }
             return true;
         }
-
+        /* встроенные класс, обеспечивающий основной функционал тестирования и сохранения результатов
+         * в своих полях, результаты можно получить при помощи геттеров
+         * */
         private class TestInfo {
             public TestInfo(int maxSetQuantity)
             {
@@ -462,6 +472,11 @@ namespace ClusterizationGeneticAlgorihm
                 }
                 return false;
             }
+            /* обеспечивает поиск и сохранение во внутренних полях класса списка значений фитнесс функции
+             * схемы фильтрации на подходящих для особи изображениях, соответствующий список номеров изображений
+             * номер схемы фильтрации (только 1-й), среднее значение фитнесса для всех изображений, 
+             * удовлетворяющих схеме
+             * */
             public void SelectFittedImages(double[,] testData, int rowsNumber, int columnsNumber,
                                          double[,] currentSampleContent, int[] currentSampleFilter){
                 int counter = 0;
